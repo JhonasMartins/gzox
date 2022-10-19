@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>572461647457-p1ljgcl1liuls8asrhl6i87m9j9bo0u0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.572461647457-p1ljgcl1liuls8asrhl6i87m9j9bo0u0</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>572461647457-43eovcvrr05clsti498h1iqcej1i5gec.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBhfe1aV66YPZBebeGeNXH9JIYWfPSX0bc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>572461647457</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mycompany.gzox</string>
+	<key>PROJECT_ID</key>
+	<string>gzox-intelligence</string>
+	<key>STORAGE_BUCKET</key>
+	<string>gzox-intelligence.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:572461647457:ios:88626c4a87f777083bcc20</string>
+	<key>DATABASE_URL</key>
+	<string>https://gzox-intelligence-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

@@ -1,0 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rxdart/rxdart.dart';
+
+import 'auth_util.dart';
+
+class GzoxSystemFirebaseUser {
+  GzoxSystemFirebaseUser(this.user);
+  User? user;
+  bool get loggedIn => user != null;
+}
+
+GzoxSystemFirebaseUser? currentUser;
+bool get loggedIn => currentUser?.loggedIn ?? false;
+Stream<GzoxSystemFirebaseUser> gzoxSystemFirebaseUserStream() =>
+    FirebaseAuth.instance
+        .authStateChanges()
+        .debounce((user) => user == null && !loggedIn
+            ? TimerStream(true, const Duration(seconds: 1))
+            : Stream.value(user))
+        .map<GzoxSystemFirebaseUser>(
+      (user) {
+        currentUser = GzoxSystemFirebaseUser(user);
+        updateUserJwtTimer(user);
+        return currentUser!;
+      },
+    );
