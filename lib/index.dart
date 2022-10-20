@@ -26,4 +26,3 @@ export 'retorno/retorno_widget.dart' show RetornoWidget;
 export 'redefinirsenha/redefinirsenha_widget.dart' show RedefinirsenhaWidget;
 export 'nova_aplicacao/nova_aplicacao_widget.dart' show NovaAplicacaoWidget;
 export 'mapa/mapa_widget.dart' show MapaWidget;
-export 'fdsf/fdsf_widget.dart' show FdsfWidget;

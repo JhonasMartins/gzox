@@ -159,7 +159,6 @@ final pageBuilderMap = <String, Future<Widget> Function(Map<String, dynamic>)>{
         cities:
             await getDocumentParameter(data, 'cities', MapasRecord.serializer),
       ),
-  'fdsf': (data) async => FdsfWidget(),
 };
 
 bool hasMatchingParameters(Map<String, dynamic> data, Set<String> params) =>

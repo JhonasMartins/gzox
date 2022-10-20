@@ -5,6 +5,7 @@ import '../flutter_flow/flutter_flow_util.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class InicioWidget extends StatefulWidget {
@@ -15,19 +16,23 @@ class InicioWidget extends StatefulWidget {
 }
 
 class _InicioWidgetState extends State<InicioWidget> {
-  TextEditingController? textController;
+  TextEditingController? nomeController1;
+  TextEditingController? nomeController2;
+  TextEditingController? textController1;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
+    textController1 = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
-    textController?.dispose();
+    nomeController1?.dispose();
+    nomeController2?.dispose();
+    textController1?.dispose();
     super.dispose();
   }
 
@@ -39,6 +44,19 @@ class _InicioWidgetState extends State<InicioWidget> {
       appBar: AppBar(
         backgroundColor: Color(0xFF1A1B24),
         automaticallyImplyLeading: false,
+        leading: Align(
+          alignment: AlignmentDirectional(0, 0.1),
+          child: InkWell(
+            onTap: () async {
+              context.pushNamed('mapa');
+            },
+            child: FaIcon(
+              FontAwesomeIcons.mapMarkedAlt,
+              color: FlutterFlowTheme.of(context).tertiary400,
+              size: 24,
+            ),
+          ),
+        ),
         title: Image.asset(
           'assets/images/gzox_system_logo.png',
           width: 300,
@@ -104,9 +122,9 @@ class _InicioWidgetState extends State<InicioWidget> {
                           padding:
                               EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
                           child: TextFormField(
-                            controller: textController,
+                            controller: textController1,
                             onChanged: (_) => EasyDebounce.debounce(
-                              'textController',
+                              'textController1',
                               Duration(milliseconds: 2000),
                               () => setState(() {}),
                             ),
@@ -173,7 +191,7 @@ class _InicioWidgetState extends State<InicioWidget> {
             StreamBuilder<List<VeiculoRecord>>(
               stream: queryVeiculoRecord(
                 queryBuilder: (veiculoRecord) => veiculoRecord.where('Placa',
-                    isEqualTo: textController!.text),
+                    isEqualTo: textController1!.text),
                 limit: 1,
               ),
               builder: (context, snapshot) {
@@ -192,10 +210,12 @@ class _InicioWidgetState extends State<InicioWidget> {
                 }
                 List<VeiculoRecord> listViewVeiculoRecordList = snapshot.data!;
                 if (listViewVeiculoRecordList.isEmpty) {
-                  return Image.asset(
-                    'assets/images/undraw_preferences_popup_re_4qk0_copiar.webp',
-                    width: MediaQuery.of(context).size.width * 0.88,
-                    height: 188,
+                  return Center(
+                    child: Image.asset(
+                      'assets/images/undraw_preferences_popup_re_4qk0_copiar.webp',
+                      width: MediaQuery.of(context).size.width * 0.88,
+                      height: double.infinity,
+                    ),
                   );
                 }
                 return ListView.builder(
@@ -336,68 +356,86 @@ class _InicioWidgetState extends State<InicioWidget> {
                                     ],
                                   ),
                                 ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 10, 0),
-                                        child: Text(
-                                          'Marca',
-                                          textAlign: TextAlign.end,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1
-                                              .override(
-                                                fontFamily: 'Lexend Deca',
-                                                color: Color(0xFF57636C),
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            10, 0, 0, 0),
-                                        child: Text(
-                                          'Modelo',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1
-                                              .override(
-                                                fontFamily: 'Lexend Deca',
-                                                color: Color(0xFF57636C),
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 4, 0, 0),
+                                      0, 8, 0, 8),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Expanded(
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0, 0, 10, 0),
-                                          child: Text(
-                                            listViewVeiculoRecord.marca!,
-                                            textAlign: TextAlign.end,
-                                            style: FlutterFlowTheme.of(context)
-                                                .subtitle2
-                                                .override(
-                                                  fontFamily: 'Roboto Mono',
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
+                                                  0, 0, 2, 0),
+                                          child: TextFormField(
+                                            controller: nomeController1 ??=
+                                                TextEditingController(
+                                              text: listViewVeiculoRecord.marca,
+                                            ),
+                                            readOnly: true,
+                                            obscureText: false,
+                                            decoration: InputDecoration(
+                                              labelText: 'Marca',
+                                              labelStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText2
+                                                      .override(
+                                                        fontFamily: 'Poppins',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryBtnText,
+                                                      ),
+                                              hintStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText2,
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .grayIcon,
+                                                  width: 2,
                                                 ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .grayIcon,
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              focusedErrorBorder:
+                                                  OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              filled: true,
+                                              fillColor: Color(0xFF20222C),
+                                              contentPadding:
+                                                  EdgeInsetsDirectional
+                                                      .fromSTEB(16, 24, 0, 24),
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1,
+                                            textAlign: TextAlign.center,
                                           ),
                                         ),
                                       ),
@@ -405,17 +443,76 @@ class _InicioWidgetState extends State<InicioWidget> {
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  10, 0, 0, 0),
-                                          child: Text(
-                                            listViewVeiculoRecord.modelo!,
-                                            style: FlutterFlowTheme.of(context)
-                                                .subtitle2
-                                                .override(
-                                                  fontFamily: 'Roboto Mono',
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
+                                                  0, 0, 2, 0),
+                                          child: TextFormField(
+                                            controller: nomeController2 ??=
+                                                TextEditingController(
+                                              text:
+                                                  listViewVeiculoRecord.modelo,
+                                            ),
+                                            readOnly: true,
+                                            obscureText: false,
+                                            decoration: InputDecoration(
+                                              labelText: 'Modelo',
+                                              labelStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText2
+                                                      .override(
+                                                        fontFamily: 'Poppins',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryBtnText,
+                                                      ),
+                                              hintStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText2,
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .grayIcon,
+                                                  width: 2,
                                                 ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .grayIcon,
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              focusedErrorBorder:
+                                                  OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              filled: true,
+                                              fillColor: Color(0xFF20222C),
+                                              contentPadding:
+                                                  EdgeInsetsDirectional
+                                                      .fromSTEB(16, 24, 0, 24),
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1,
+                                            textAlign: TextAlign.center,
                                           ),
                                         ),
                                       ),

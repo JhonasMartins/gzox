@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class DetalhesDaAplicacaoWidget extends StatefulWidget {
   const DetalhesDaAplicacaoWidget({
@@ -36,6 +37,10 @@ class DetalhesDaAplicacaoWidget extends StatefulWidget {
 }
 
 class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
+  PagingController<DocumentSnapshot?, AplicacaoGzoxRecord>? _pagingController;
+  Query? _pagingQuery;
+  List<StreamSubscription?> _streamSubscriptions = [];
+
   String? choiceChipsValue1;
   String? choiceChipsValue2;
   TextEditingController? nomeController1;
@@ -60,6 +65,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
 
   @override
   void dispose() {
+    _streamSubscriptions.forEach((s) => s?.cancel());
     nomeController1?.dispose();
     nomeController2?.dispose();
     nomeController3?.dispose();
@@ -148,7 +154,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                         padding: EdgeInsetsDirectional.fromSTEB(0, 300, 0, 0),
                         child: Container(
                           width: double.infinity,
-                          height: 700,
+                          height: 2000,
                           decoration: BoxDecoration(
                             color: Color(0xFF20222C),
                             boxShadow: [
@@ -299,7 +305,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                 ),
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 5, 16, 0),
+                                      16, 10, 16, 0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -382,7 +388,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                 ),
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 5, 16, 0),
+                                      16, 10, 16, 0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -537,7 +543,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                 ),
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 5, 16, 0),
+                                      16, 10, 16, 0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -729,341 +735,310 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                                           EdgeInsetsDirectional
                                                               .fromSTEB(
                                                                   0, 0, 0, 24),
-                                                      child: StreamBuilder<
-                                                          List<
-                                                              AplicacaoGzoxRecord>>(
-                                                        stream:
-                                                            queryAplicacaoGzoxRecord(
-                                                          queryBuilder: (aplicacaoGzoxRecord) =>
-                                                              aplicacaoGzoxRecord
-                                                                  .where(
+                                                      child: PagedListView<
+                                                          DocumentSnapshot<
+                                                              Object?>?,
+                                                          AplicacaoGzoxRecord>(
+                                                        pagingController: () {
+                                                          final Query<Object?> Function(
+                                                                  Query<
+                                                                      Object?>)
+                                                              queryBuilder =
+                                                              (aplicacaoGzoxRecord) =>
+                                                                  aplicacaoGzoxRecord.where(
+                                                                      'placa',
+                                                                      isEqualTo:
+                                                                          widget
+                                                                              .placa);
+                                                          if (_pagingController !=
+                                                              null) {
+                                                            final query = queryBuilder(
+                                                                AplicacaoGzoxRecord
+                                                                    .collection);
+                                                            if (query !=
+                                                                _pagingQuery) {
+                                                              // The query has changed
+                                                              _pagingQuery =
+                                                                  query;
+                                                              _streamSubscriptions
+                                                                  .forEach((s) =>
+                                                                      s?.cancel());
+                                                              _streamSubscriptions
+                                                                  .clear();
+                                                              _pagingController!
+                                                                  .refresh();
+                                                            }
+                                                            return _pagingController!;
+                                                          }
+
+                                                          _pagingController =
+                                                              PagingController(
+                                                                  firstPageKey:
+                                                                      null);
+                                                          _pagingQuery = queryBuilder(
+                                                              AplicacaoGzoxRecord
+                                                                  .collection);
+                                                          _pagingController!
+                                                              .addPageRequestListener(
+                                                                  (nextPageMarker) {
+                                                            queryAplicacaoGzoxRecordPage(
+                                                              queryBuilder: (aplicacaoGzoxRecord) =>
+                                                                  aplicacaoGzoxRecord.where(
                                                                       'placa',
                                                                       isEqualTo:
                                                                           widget
                                                                               .placa),
-                                                        ),
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          // Customize what your widget looks like when it's loading.
-                                                          if (!snapshot
-                                                              .hasData) {
-                                                            return Center(
-                                                              child: SizedBox(
-                                                                width: 50,
-                                                                height: 50,
-                                                                child:
-                                                                    SpinKitChasingDots(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryColor,
-                                                                  size: 50,
-                                                                ),
+                                                              nextPageMarker:
+                                                                  nextPageMarker,
+                                                              pageSize: 25,
+                                                              isStream: true,
+                                                            ).then((page) {
+                                                              _pagingController!
+                                                                  .appendPage(
+                                                                page.data,
+                                                                page.nextPageMarker,
+                                                              );
+                                                              final streamSubscription =
+                                                                  page
+                                                                      .dataStream
+                                                                      ?.listen(
+                                                                          (data) {
+                                                                final itemIndexes = _pagingController!
+                                                                    .itemList!
+                                                                    .asMap()
+                                                                    .map((k,
+                                                                            v) =>
+                                                                        MapEntry(
+                                                                            v.reference.id,
+                                                                            k));
+                                                                data.forEach(
+                                                                    (item) {
+                                                                  final index =
+                                                                      itemIndexes[item
+                                                                          .reference
+                                                                          .id];
+                                                                  final items =
+                                                                      _pagingController!
+                                                                          .itemList!;
+                                                                  if (index !=
+                                                                      null) {
+                                                                    items.replaceRange(
+                                                                        index,
+                                                                        index +
+                                                                            1,
+                                                                        [item]);
+                                                                    _pagingController!
+                                                                        .itemList = {
+                                                                      for (var item
+                                                                          in items)
+                                                                        item.reference:
+                                                                            item
+                                                                    }
+                                                                        .values
+                                                                        .toList();
+                                                                  }
+                                                                });
+                                                                setState(() {});
+                                                              });
+                                                              _streamSubscriptions
+                                                                  .add(
+                                                                      streamSubscription);
+                                                            });
+                                                          });
+                                                          return _pagingController!;
+                                                        }(),
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                        primary: false,
+                                                        shrinkWrap: true,
+                                                        scrollDirection:
+                                                            Axis.vertical,
+                                                        builderDelegate:
+                                                            PagedChildBuilderDelegate<
+                                                                AplicacaoGzoxRecord>(
+                                                          // Customize what your widget looks like when it's loading the first page.
+                                                          firstPageProgressIndicatorBuilder:
+                                                              (_) => Center(
+                                                            child: SizedBox(
+                                                              width: 50,
+                                                              height: 50,
+                                                              child:
+                                                                  SpinKitChasingDots(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primaryColor,
+                                                                size: 50,
                                                               ),
-                                                            );
-                                                          }
-                                                          List<AplicacaoGzoxRecord>
-                                                              listViewAplicacaoGzoxRecordList =
-                                                              snapshot.data!;
-                                                          return ListView
-                                                              .builder(
-                                                            padding:
-                                                                EdgeInsets.zero,
-                                                            primary: false,
-                                                            shrinkWrap: true,
-                                                            scrollDirection:
-                                                                Axis.vertical,
-                                                            itemCount:
-                                                                listViewAplicacaoGzoxRecordList
-                                                                    .length,
-                                                            itemBuilder: (context,
-                                                                listViewIndex) {
-                                                              final listViewAplicacaoGzoxRecord =
-                                                                  listViewAplicacaoGzoxRecordList[
-                                                                      listViewIndex];
-                                                              return Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            16,
-                                                                            0,
-                                                                            16,
-                                                                            8),
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Expanded(
-                                                                      child:
-                                                                          Column(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.max,
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            'Produto aplicado',
-                                                                            style: FlutterFlowTheme.of(context).bodyText2.override(
+                                                            ),
+                                                          ),
+
+                                                          itemBuilder: (context,
+                                                              _,
+                                                              listViewIndex) {
+                                                            final listViewAplicacaoGzoxRecord =
+                                                                _pagingController!
+                                                                        .itemList![
+                                                                    listViewIndex];
+                                                            return Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          16,
+                                                                          10,
+                                                                          16,
+                                                                          8),
+                                                              child: Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Text(
+                                                                          'Produto da aplicação',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyText2
+                                                                              .override(
+                                                                                fontFamily: 'Poppins',
+                                                                                color: FlutterFlowTheme.of(context).tertiary400,
+                                                                              ),
+                                                                        ),
+                                                                        Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              0,
+                                                                              4,
+                                                                              0,
+                                                                              8),
+                                                                          child:
+                                                                              Text(
+                                                                            listViewAplicacaoGzoxRecord.produtoGzox!,
+                                                                            style: FlutterFlowTheme.of(context).title3.override(
                                                                                   fontFamily: 'Poppins',
-                                                                                  color: FlutterFlowTheme.of(context).tertiary400,
-                                                                                ),
-                                                                          ),
-                                                                          Padding(
-                                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                                0,
-                                                                                4,
-                                                                                0,
-                                                                                8),
-                                                                            child:
-                                                                                Text(
-                                                                              listViewAplicacaoGzoxRecord.produtoGzox!,
-                                                                              style: FlutterFlowTheme.of(context).title3.override(
-                                                                                    fontFamily: 'Poppins',
-                                                                                    fontSize: 17,
-                                                                                  ),
-                                                                            ),
-                                                                          ),
-                                                                          Text(
-                                                                            'Data da aplicação',
-                                                                            style: FlutterFlowTheme.of(context).bodyText2.override(
-                                                                                  fontFamily: 'Poppins',
-                                                                                  color: FlutterFlowTheme.of(context).tertiary400,
-                                                                                ),
-                                                                          ),
-                                                                          Text(
-                                                                            dateTimeFormat(
-                                                                              'd/M/y',
-                                                                              listViewAplicacaoGzoxRecord.dataDaAplicacao!,
-                                                                              locale: FFLocalizations.of(context).languageCode,
-                                                                            ),
-                                                                            style: FlutterFlowTheme.of(context).subtitle1.override(
-                                                                                  fontFamily: 'Poppins',
-                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
                                                                                   fontSize: 17,
                                                                                 ),
                                                                           ),
-                                                                          Text(
-                                                                            'Produtos secundários',
-                                                                            style: FlutterFlowTheme.of(context).bodyText2.override(
-                                                                                  fontFamily: 'Poppins',
-                                                                                  color: FlutterFlowTheme.of(context).tertiary400,
-                                                                                ),
-                                                                          ),
-                                                                          FlutterFlowChoiceChips(
-                                                                            options:
-                                                                                listViewAplicacaoGzoxRecord.produtosSecundarios!.toList().map((label) => ChipData(label)).toList(),
-                                                                            onChanged: (val) =>
-                                                                                setState(() => choiceChipsValue1 = val?.first),
-                                                                            selectedChipStyle:
-                                                                                ChipStyle(
-                                                                              backgroundColor: Color(0xFF323B45),
-                                                                              textStyle: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                    fontFamily: 'Poppins',
-                                                                                    color: Colors.white,
-                                                                                  ),
-                                                                              iconColor: Colors.white,
-                                                                              iconSize: 18,
-                                                                              elevation: 4,
-                                                                            ),
-                                                                            unselectedChipStyle:
-                                                                                ChipStyle(
-                                                                              backgroundColor: Colors.white,
-                                                                              textStyle: FlutterFlowTheme.of(context).bodyText2.override(
-                                                                                    fontFamily: 'Poppins',
-                                                                                    color: Color(0xFF323B45),
-                                                                                  ),
-                                                                              iconColor: Color(0xFF323B45),
-                                                                              iconSize: 18,
-                                                                              elevation: 4,
-                                                                            ),
-                                                                            chipSpacing:
-                                                                                20,
-                                                                            multiselect:
-                                                                                false,
-                                                                            alignment:
-                                                                                WrapAlignment.start,
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: EdgeInsetsDirectional
-                                                                          .fromSTEB(
-                                                                              8,
-                                                                              8,
-                                                                              0,
-                                                                              8),
-                                                                      child:
-                                                                          ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(12),
-                                                                        child: Image
-                                                                            .network(
-                                                                          listViewAplicacaoGzoxRecord
-                                                                              .fotografia!,
-                                                                          width:
-                                                                              100,
-                                                                          height:
-                                                                              100,
-                                                                          fit: BoxFit
-                                                                              .cover,
                                                                         ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              );
-                                                            },
-                                                          );
-                                                        },
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0, 0, 0, 24),
-                                                      child: StreamBuilder<
-                                                          List<
-                                                              AplicacaoGzoxRecord>>(
-                                                        stream:
-                                                            queryAplicacaoGzoxRecord(
-                                                          queryBuilder: (aplicacaoGzoxRecord) =>
-                                                              aplicacaoGzoxRecord
-                                                                  .where(
-                                                                      'placa',
-                                                                      isEqualTo:
-                                                                          widget
-                                                                              .placa),
-                                                        ),
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          // Customize what your widget looks like when it's loading.
-                                                          if (!snapshot
-                                                              .hasData) {
-                                                            return Center(
-                                                              child: SizedBox(
-                                                                width: 50,
-                                                                height: 50,
-                                                                child:
-                                                                    SpinKitChasingDots(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryColor,
-                                                                  size: 50,
-                                                                ),
-                                                              ),
-                                                            );
-                                                          }
-                                                          List<AplicacaoGzoxRecord>
-                                                              listViewAplicacaoGzoxRecordList =
-                                                              snapshot.data!;
-                                                          return ListView
-                                                              .builder(
-                                                            padding:
-                                                                EdgeInsets.zero,
-                                                            primary: false,
-                                                            shrinkWrap: true,
-                                                            scrollDirection:
-                                                                Axis.vertical,
-                                                            itemCount:
-                                                                listViewAplicacaoGzoxRecordList
-                                                                    .length,
-                                                            itemBuilder: (context,
-                                                                listViewIndex) {
-                                                              final listViewAplicacaoGzoxRecord =
-                                                                  listViewAplicacaoGzoxRecordList[
-                                                                      listViewIndex];
-                                                              return Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            16,
-                                                                            0,
-                                                                            16,
-                                                                            8),
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Expanded(
-                                                                      child:
-                                                                          Column(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.max,
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            'Produto aplicado',
-                                                                            style: FlutterFlowTheme.of(context).bodyText2.override(
+                                                                        Text(
+                                                                          'Data da aplicação',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyText2
+                                                                              .override(
+                                                                                fontFamily: 'Poppins',
+                                                                                color: FlutterFlowTheme.of(context).tertiary400,
+                                                                              ),
+                                                                        ),
+                                                                        Text(
+                                                                          dateTimeFormat(
+                                                                            'd/M/y',
+                                                                            listViewAplicacaoGzoxRecord.dataDaAplicacao!,
+                                                                            locale:
+                                                                                FFLocalizations.of(context).languageCode,
+                                                                          ),
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .subtitle1
+                                                                              .override(
+                                                                                fontFamily: 'Poppins',
+                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                              ),
+                                                                        ),
+                                                                        Text(
+                                                                          'Produtos secundários',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyText2
+                                                                              .override(
+                                                                                fontFamily: 'Poppins',
+                                                                                color: FlutterFlowTheme.of(context).tertiary400,
+                                                                              ),
+                                                                        ),
+                                                                        FlutterFlowChoiceChips(
+                                                                          options: listViewAplicacaoGzoxRecord
+                                                                              .produtosSecundarios!
+                                                                              .toList()
+                                                                              .map((label) => ChipData(label))
+                                                                              .toList(),
+                                                                          onChanged: (val) =>
+                                                                              setState(() => choiceChipsValue1 = val?.first),
+                                                                          selectedChipStyle:
+                                                                              ChipStyle(
+                                                                            backgroundColor:
+                                                                                Color(0xFF323B45),
+                                                                            textStyle: FlutterFlowTheme.of(context).bodyText1.override(
                                                                                   fontFamily: 'Poppins',
                                                                                   color: Colors.white,
                                                                                 ),
-                                                                          ),
-                                                                          Padding(
-                                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                                0,
+                                                                            iconColor:
+                                                                                Colors.white,
+                                                                            iconSize:
+                                                                                18,
+                                                                            elevation:
                                                                                 4,
-                                                                                0,
-                                                                                8),
-                                                                            child:
-                                                                                Text(
-                                                                              listViewAplicacaoGzoxRecord.produtoGzox!,
-                                                                              style: FlutterFlowTheme.of(context).title3,
-                                                                            ),
                                                                           ),
-                                                                          Text(
-                                                                            dateTimeFormat(
-                                                                              'd/M/y',
-                                                                              listViewAplicacaoGzoxRecord.dataDaAplicacao!,
-                                                                              locale: FFLocalizations.of(context).languageCode,
-                                                                            ),
-                                                                            style: FlutterFlowTheme.of(context).subtitle1.override(
+                                                                          unselectedChipStyle:
+                                                                              ChipStyle(
+                                                                            backgroundColor:
+                                                                                Colors.white,
+                                                                            textStyle: FlutterFlowTheme.of(context).bodyText2.override(
                                                                                   fontFamily: 'Poppins',
-                                                                                  color: Color(0xFFFF6424),
+                                                                                  color: Color(0xFF323B45),
                                                                                 ),
+                                                                            iconColor:
+                                                                                Color(0xFF323B45),
+                                                                            iconSize:
+                                                                                18,
+                                                                            elevation:
+                                                                                4,
                                                                           ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: EdgeInsetsDirectional
-                                                                          .fromSTEB(
-                                                                              8,
-                                                                              8,
-                                                                              0,
-                                                                              8),
-                                                                      child:
-                                                                          ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(12),
-                                                                        child: Image
-                                                                            .network(
-                                                                          listViewAplicacaoGzoxRecord
-                                                                              .fotografia!,
-                                                                          width:
-                                                                              100,
-                                                                          height:
-                                                                              100,
-                                                                          fit: BoxFit
-                                                                              .cover,
+                                                                          chipSpacing:
+                                                                              20,
+                                                                          multiselect:
+                                                                              false,
+                                                                          alignment:
+                                                                              WrapAlignment.start,
                                                                         ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            8,
+                                                                            8,
+                                                                            0,
+                                                                            8),
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              12),
+                                                                      child: Image
+                                                                          .network(
+                                                                        listViewAplicacaoGzoxRecord
+                                                                            .fotografia!,
+                                                                        width:
+                                                                            100,
+                                                                        height:
+                                                                            100,
+                                                                        fit: BoxFit
+                                                                            .cover,
                                                                       ),
                                                                     ),
-                                                                  ],
-                                                                ),
-                                                              );
-                                                            },
-                                                          );
-                                                        },
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -1091,14 +1066,13 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                                       if (!snapshot.hasData) {
                                                         return Center(
                                                           child: SizedBox(
-                                                            width: 50,
-                                                            height: 50,
+                                                            width: 40,
+                                                            height: 40,
                                                             child:
-                                                                SpinKitChasingDots(
+                                                                CircularProgressIndicator(
                                                               color: FlutterFlowTheme
                                                                       .of(context)
                                                                   .primaryColor,
-                                                              size: 50,
                                                             ),
                                                           ),
                                                         );
@@ -1126,7 +1100,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                                                 EdgeInsetsDirectional
                                                                     .fromSTEB(
                                                                         16,
-                                                                        0,
+                                                                        10,
                                                                         16,
                                                                         8),
                                                             child: Row(
@@ -1195,6 +1169,26 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                                                             .override(
                                                                               fontFamily: 'Poppins',
                                                                               color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        'O que foi feito?',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyText2
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).tertiary400,
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        listViewManutencaoGzoxRecord
+                                                                            .oQueFoiFeito!,
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .subtitle1
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                              fontSize: 13,
                                                                             ),
                                                                       ),
                                                                       Text(

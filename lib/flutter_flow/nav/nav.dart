@@ -242,11 +242,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) => MapaWidget(
                 cities: params.getParam('cities', ParamType.Document),
               ),
-            ),
-            FFRoute(
-              name: 'fdsf',
-              path: 'fdsf',
-              builder: (context, params) => FdsfWidget(),
             )
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ).toRoute(appStateNotifier),

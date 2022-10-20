@@ -28,7 +28,8 @@ class ClienteDetalheWidget extends StatefulWidget {
 }
 
 class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
-  String? choiceChipsValue;
+  String? choiceChipsValue1;
+  String? choiceChipsValue2;
   TextEditingController? nomeController1;
   TextEditingController? nomeController2;
   TextEditingController? nomeController3;
@@ -164,7 +165,7 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                 EdgeInsetsDirectional.fromSTEB(0, 300, 0, 0),
                             child: Container(
                               width: double.infinity,
-                              height: 700,
+                              height: 2000,
                               decoration: BoxDecoration(
                                 color: Color(0xFF20222C),
                                 boxShadow: [
@@ -398,32 +399,25 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                     TextEditingController(
                                                   text:
                                                       clienteDetalheVeiculoRecord
-                                                          .marca,
+                                                          .placa,
                                                 ),
                                                 readOnly: true,
                                                 obscureText: false,
                                                 decoration: InputDecoration(
-                                                  labelText: 'Nome',
+                                                  labelText: 'Placa',
                                                   labelStyle: FlutterFlowTheme
                                                           .of(context)
-                                                      .bodyText2
+                                                      .bodyText1
                                                       .override(
                                                         fontFamily: 'Poppins',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryBtnText,
-                                                        fontSize: 16,
+                                                        fontSize: 14,
                                                       ),
                                                   hintStyle: FlutterFlowTheme
                                                           .of(context)
-                                                      .bodyText2
+                                                      .bodyText1
                                                       .override(
                                                         fontFamily: 'Poppins',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryBtnText,
+                                                        fontSize: 14,
                                                       ),
                                                   enabledBorder:
                                                       OutlineInputBorder(
@@ -494,7 +488,7 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                     ),
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          16, 5, 16, 0),
+                                          16, 10, 16, 0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -514,7 +508,7 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                 readOnly: true,
                                                 obscureText: false,
                                                 decoration: InputDecoration(
-                                                  labelText: 'Nome',
+                                                  labelText: 'Marca',
                                                   labelStyle: FlutterFlowTheme
                                                           .of(context)
                                                       .bodyText2
@@ -603,7 +597,7 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                 readOnly: true,
                                                 obscureText: false,
                                                 decoration: InputDecoration(
-                                                  labelText: 'Nome',
+                                                  labelText: 'Modelo',
                                                   labelStyle: FlutterFlowTheme
                                                           .of(context)
                                                       .bodyText2
@@ -683,7 +677,7 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                     ),
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          16, 5, 16, 0),
+                                          16, 10, 16, 0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -703,7 +697,7 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                 readOnly: true,
                                                 obscureText: false,
                                                 decoration: InputDecoration(
-                                                  labelText: 'Nome',
+                                                  labelText: 'Tipo de veículo',
                                                   labelStyle: FlutterFlowTheme
                                                           .of(context)
                                                       .bodyText2
@@ -792,7 +786,7 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                 readOnly: true,
                                                 obscureText: false,
                                                 decoration: InputDecoration(
-                                                  labelText: 'Nome',
+                                                  labelText: 'Quilometragem',
                                                   labelStyle: FlutterFlowTheme
                                                           .of(context)
                                                       .bodyText2
@@ -872,7 +866,7 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                     ),
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          16, 5, 16, 0),
+                                          16, 10, 16, 0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -892,7 +886,8 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                 readOnly: true,
                                                 obscureText: false,
                                                 decoration: InputDecoration(
-                                                  labelText: 'Nome',
+                                                  labelText:
+                                                      'Nome do proprietário',
                                                   labelStyle: FlutterFlowTheme
                                                           .of(context)
                                                       .bodyText2
@@ -1045,7 +1040,6 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                             padding:
                                                                 EdgeInsets.zero,
                                                             primary: false,
-                                                            shrinkWrap: true,
                                                             scrollDirection:
                                                                 Axis.vertical,
                                                             itemCount:
@@ -1135,28 +1129,28 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                                             options:
                                                                                 listViewAplicacaoGzoxRecord.produtosSecundarios!.toList().map((label) => ChipData(label)).toList(),
                                                                             onChanged: (val) =>
-                                                                                setState(() => choiceChipsValue = val?.first),
+                                                                                setState(() => choiceChipsValue1 = val?.first),
                                                                             selectedChipStyle:
                                                                                 ChipStyle(
-                                                                              backgroundColor: Color(0xFF20222C),
+                                                                              backgroundColor: Color(0xFF323B45),
                                                                               textStyle: FlutterFlowTheme.of(context).bodyText1.override(
                                                                                     fontFamily: 'Poppins',
-                                                                                    color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                    color: Colors.white,
                                                                                   ),
-                                                                              iconColor: Color(0x00000000),
-                                                                              iconSize: 0,
-                                                                              elevation: 0,
+                                                                              iconColor: Colors.white,
+                                                                              iconSize: 18,
+                                                                              elevation: 4,
                                                                             ),
                                                                             unselectedChipStyle:
                                                                                 ChipStyle(
-                                                                              backgroundColor: Color(0xFF20222C),
+                                                                              backgroundColor: Colors.white,
                                                                               textStyle: FlutterFlowTheme.of(context).bodyText2.override(
                                                                                     fontFamily: 'Poppins',
-                                                                                    color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                    color: Color(0xFF323B45),
                                                                                   ),
-                                                                              iconColor: Color(0x00000000),
-                                                                              iconSize: 0,
-                                                                              elevation: 0,
+                                                                              iconColor: Color(0xFF323B45),
+                                                                              iconSize: 18,
+                                                                              elevation: 4,
                                                                             ),
                                                                             chipSpacing:
                                                                                 20,
@@ -1244,7 +1238,6 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                             padding:
                                                                 EdgeInsets.zero,
                                                             primary: false,
-                                                            shrinkWrap: true,
                                                             scrollDirection:
                                                                 Axis.vertical,
                                                             itemCount:
@@ -1323,7 +1316,7 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                                                 ),
                                                                           ),
                                                                           Text(
-                                                                            'O que foi feito?',
+                                                                            'Produtos secundários',
                                                                             style: FlutterFlowTheme.of(context).subtitle1.override(
                                                                                   fontFamily: 'Poppins',
                                                                                   color: Color(0xFFFF4D00),
@@ -1337,6 +1330,48 @@ class _ClienteDetalheWidgetState extends State<ClienteDetalheWidget> {
                                                                                   color: FlutterFlowTheme.of(context).primaryBtnText,
                                                                                   fontSize: 17,
                                                                                 ),
+                                                                          ),
+                                                                          Text(
+                                                                            'Produtos secundários',
+                                                                            style: FlutterFlowTheme.of(context).subtitle1.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  color: Color(0xFFFF4D00),
+                                                                                  fontSize: 16,
+                                                                                ),
+                                                                          ),
+                                                                          FlutterFlowChoiceChips(
+                                                                            options:
+                                                                                listViewManutencaoGzoxRecord.secund!.toList().map((label) => ChipData(label)).toList(),
+                                                                            onChanged: (val) =>
+                                                                                setState(() => choiceChipsValue2 = val?.first),
+                                                                            selectedChipStyle:
+                                                                                ChipStyle(
+                                                                              backgroundColor: Color(0xFF323B45),
+                                                                              textStyle: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                    fontFamily: 'Poppins',
+                                                                                    color: Colors.white,
+                                                                                  ),
+                                                                              iconColor: Colors.white,
+                                                                              iconSize: 18,
+                                                                              elevation: 4,
+                                                                            ),
+                                                                            unselectedChipStyle:
+                                                                                ChipStyle(
+                                                                              backgroundColor: Colors.white,
+                                                                              textStyle: FlutterFlowTheme.of(context).bodyText2.override(
+                                                                                    fontFamily: 'Poppins',
+                                                                                    color: Color(0xFF323B45),
+                                                                                  ),
+                                                                              iconColor: Color(0xFF323B45),
+                                                                              iconSize: 18,
+                                                                              elevation: 4,
+                                                                            ),
+                                                                            chipSpacing:
+                                                                                20,
+                                                                            multiselect:
+                                                                                false,
+                                                                            alignment:
+                                                                                WrapAlignment.start,
                                                                           ),
                                                                         ],
                                                                       ),
