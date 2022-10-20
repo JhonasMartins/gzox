@@ -7,10 +7,10 @@ import '../flutter_flow/flutter_flow_util.dart';
 import 'schema/veiculo_system_record.dart';
 import 'schema/aplicacao_gzox_record.dart';
 import 'schema/manutencao_gzox_record.dart';
-import 'schema/testedesub_record.dart';
 import 'schema/dados_do_aplicador_record.dart';
 import 'schema/user_record.dart';
 import 'schema/veiculo_record.dart';
+import 'schema/mapas_record.dart';
 import 'schema/serializers.dart';
 
 export 'dart:async' show StreamSubscription;
@@ -21,10 +21,10 @@ export 'schema/serializers.dart';
 export 'schema/veiculo_system_record.dart';
 export 'schema/aplicacao_gzox_record.dart';
 export 'schema/manutencao_gzox_record.dart';
-export 'schema/testedesub_record.dart';
 export 'schema/dados_do_aplicador_record.dart';
 export 'schema/user_record.dart';
 export 'schema/veiculo_record.dart';
+export 'schema/mapas_record.dart';
 
 /// Functions to query VeiculoSystemRecords (as a Stream and as a Future).
 Stream<List<VeiculoSystemRecord>> queryVeiculoSystemRecord({
@@ -152,51 +152,6 @@ Future<FFFirestorePage<ManutencaoGzoxRecord>> queryManutencaoGzoxRecordPage({
       isStream: isStream,
     );
 
-/// Functions to query TestedesubRecords (as a Stream and as a Future).
-Stream<List<TestedesubRecord>> queryTestedesubRecord({
-  DocumentReference? parent,
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) =>
-    queryCollection(
-      TestedesubRecord.collection(parent),
-      TestedesubRecord.serializer,
-      queryBuilder: queryBuilder,
-      limit: limit,
-      singleRecord: singleRecord,
-    );
-
-Future<List<TestedesubRecord>> queryTestedesubRecordOnce({
-  DocumentReference? parent,
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) =>
-    queryCollectionOnce(
-      TestedesubRecord.collection(parent),
-      TestedesubRecord.serializer,
-      queryBuilder: queryBuilder,
-      limit: limit,
-      singleRecord: singleRecord,
-    );
-
-Future<FFFirestorePage<TestedesubRecord>> queryTestedesubRecordPage({
-  DocumentReference? parent,
-  Query Function(Query)? queryBuilder,
-  DocumentSnapshot? nextPageMarker,
-  required int pageSize,
-  required bool isStream,
-}) =>
-    queryCollectionPage(
-      TestedesubRecord.collection(parent),
-      TestedesubRecord.serializer,
-      queryBuilder: queryBuilder,
-      nextPageMarker: nextPageMarker,
-      pageSize: pageSize,
-      isStream: isStream,
-    );
-
 /// Functions to query DadosDoAplicadorRecords (as a Stream and as a Future).
 Stream<List<DadosDoAplicadorRecord>> queryDadosDoAplicadorRecord({
   Query Function(Query)? queryBuilder,
@@ -318,6 +273,48 @@ Future<FFFirestorePage<VeiculoRecord>> queryVeiculoRecordPage({
     queryCollectionPage(
       VeiculoRecord.collection,
       VeiculoRecord.serializer,
+      queryBuilder: queryBuilder,
+      nextPageMarker: nextPageMarker,
+      pageSize: pageSize,
+      isStream: isStream,
+    );
+
+/// Functions to query MapasRecords (as a Stream and as a Future).
+Stream<List<MapasRecord>> queryMapasRecord({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollection(
+      MapasRecord.collection,
+      MapasRecord.serializer,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<List<MapasRecord>> queryMapasRecordOnce({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollectionOnce(
+      MapasRecord.collection,
+      MapasRecord.serializer,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<FFFirestorePage<MapasRecord>> queryMapasRecordPage({
+  Query Function(Query)? queryBuilder,
+  DocumentSnapshot? nextPageMarker,
+  required int pageSize,
+  required bool isStream,
+}) =>
+    queryCollectionPage(
+      MapasRecord.collection,
+      MapasRecord.serializer,
       queryBuilder: queryBuilder,
       nextPageMarker: nextPageMarker,
       pageSize: pageSize,

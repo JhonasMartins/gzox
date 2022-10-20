@@ -191,6 +191,13 @@ class _InicioWidgetState extends State<InicioWidget> {
                   );
                 }
                 List<VeiculoRecord> listViewVeiculoRecordList = snapshot.data!;
+                if (listViewVeiculoRecordList.isEmpty) {
+                  return Image.asset(
+                    'assets/images/undraw_preferences_popup_re_4qk0_copiar.webp',
+                    width: MediaQuery.of(context).size.width * 0.88,
+                    height: 188,
+                  );
+                }
                 return ListView.builder(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
@@ -208,6 +215,34 @@ class _InicioWidgetState extends State<InicioWidget> {
                             queryParams: {
                               'placa': serializeParam(
                                 listViewVeiculoRecord.placa,
+                                ParamType.String,
+                              ),
+                              'marca': serializeParam(
+                                listViewVeiculoRecord.marca,
+                                ParamType.String,
+                              ),
+                              'modelo': serializeParam(
+                                listViewVeiculoRecord.modelo,
+                                ParamType.String,
+                              ),
+                              'quilometragem': serializeParam(
+                                listViewVeiculoRecord.quilometragem,
+                                ParamType.String,
+                              ),
+                              'nome': serializeParam(
+                                listViewVeiculoRecord.nomeDoDonoGzox,
+                                ParamType.String,
+                              ),
+                              'email': serializeParam(
+                                listViewVeiculoRecord.emailDoDonoGzox,
+                                ParamType.String,
+                              ),
+                              'whatsapp': serializeParam(
+                                listViewVeiculoRecord.whatsappDoDonoGzox,
+                                ParamType.String,
+                              ),
+                              'tipo': serializeParam(
+                                listViewVeiculoRecord.tipoDeVeiculo,
                                 ParamType.String,
                               ),
                             }.withoutNulls,

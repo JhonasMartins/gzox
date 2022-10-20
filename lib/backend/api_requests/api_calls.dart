@@ -107,6 +107,31 @@ class ContatoCall {
   }
 }
 
+class ManutencaoxanoCall {
+  static Future<ApiCallResponse> call({
+    String? email = '',
+    String? whatsapp = '',
+    String? nome = '',
+  }) {
+    final body = '''
+{
+  "email": "${email}",
+  "nome": "${nome}",
+  "whatsapp": "${whatsapp}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'manutencaoxano',
+      apiUrl: 'https://x8ki-letl-twmt.n7.xano.io/api:p3HikNZx/manutencao',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+    );
+  }
+}
+
 class ApiPagingParams {
   int nextPageNumber = 0;
   int numItems = 0;

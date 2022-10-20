@@ -68,6 +68,13 @@ class _$UserRecordSerializer implements StructuredSerializer<UserRecord> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
+    value = object.endereco;
+    if (value != null) {
+      result
+        ..add('Endereco')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(LatLng)));
+    }
     value = object.ffRef;
     if (value != null) {
       result
@@ -118,6 +125,10 @@ class _$UserRecordSerializer implements StructuredSerializer<UserRecord> {
           result.urlFoto = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
+        case 'Endereco':
+          result.endereco = serializers.deserialize(value,
+              specifiedType: const FullType(LatLng)) as LatLng?;
+          break;
         case 'Document__Reference__Field':
           result.ffRef = serializers.deserialize(value,
               specifiedType: const FullType(DocumentReference, const [
@@ -147,6 +158,8 @@ class _$UserRecord extends UserRecord {
   @override
   final String? urlFoto;
   @override
+  final LatLng? endereco;
+  @override
   final DocumentReference<Object?>? ffRef;
 
   factory _$UserRecord([void Function(UserRecordBuilder)? updates]) =>
@@ -160,6 +173,7 @@ class _$UserRecord extends UserRecord {
       this.createdTime,
       this.phoneNumber,
       this.urlFoto,
+      this.endereco,
       this.ffRef})
       : super._();
 
@@ -181,6 +195,7 @@ class _$UserRecord extends UserRecord {
         createdTime == other.createdTime &&
         phoneNumber == other.phoneNumber &&
         urlFoto == other.urlFoto &&
+        endereco == other.endereco &&
         ffRef == other.ffRef;
   }
 
@@ -191,12 +206,16 @@ class _$UserRecord extends UserRecord {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, email.hashCode), displayName.hashCode),
-                            photoUrl.hashCode),
-                        uid.hashCode),
-                    createdTime.hashCode),
-                phoneNumber.hashCode),
-            urlFoto.hashCode),
+                        $jc(
+                            $jc(
+                                $jc($jc(0, email.hashCode),
+                                    displayName.hashCode),
+                                photoUrl.hashCode),
+                            uid.hashCode),
+                        createdTime.hashCode),
+                    phoneNumber.hashCode),
+                urlFoto.hashCode),
+            endereco.hashCode),
         ffRef.hashCode));
   }
 
@@ -210,6 +229,7 @@ class _$UserRecord extends UserRecord {
           ..add('createdTime', createdTime)
           ..add('phoneNumber', phoneNumber)
           ..add('urlFoto', urlFoto)
+          ..add('endereco', endereco)
           ..add('ffRef', ffRef))
         .toString();
   }
@@ -246,6 +266,10 @@ class UserRecordBuilder implements Builder<UserRecord, UserRecordBuilder> {
   String? get urlFoto => _$this._urlFoto;
   set urlFoto(String? urlFoto) => _$this._urlFoto = urlFoto;
 
+  LatLng? _endereco;
+  LatLng? get endereco => _$this._endereco;
+  set endereco(LatLng? endereco) => _$this._endereco = endereco;
+
   DocumentReference<Object?>? _ffRef;
   DocumentReference<Object?>? get ffRef => _$this._ffRef;
   set ffRef(DocumentReference<Object?>? ffRef) => _$this._ffRef = ffRef;
@@ -264,6 +288,7 @@ class UserRecordBuilder implements Builder<UserRecord, UserRecordBuilder> {
       _createdTime = $v.createdTime;
       _phoneNumber = $v.phoneNumber;
       _urlFoto = $v.urlFoto;
+      _endereco = $v.endereco;
       _ffRef = $v.ffRef;
       _$v = null;
     }
@@ -294,6 +319,7 @@ class UserRecordBuilder implements Builder<UserRecord, UserRecordBuilder> {
             createdTime: createdTime,
             phoneNumber: phoneNumber,
             urlFoto: urlFoto,
+            endereco: endereco,
             ffRef: ffRef);
     replace(_$result);
     return _$result;

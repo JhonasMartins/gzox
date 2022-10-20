@@ -39,13 +39,6 @@ class _$ManutencaoGzoxRecordSerializer
         ..add(serializers.serialize(value,
             specifiedType: const FullType(DateTime)));
     }
-    value = object.produtosSecundarios;
-    if (value != null) {
-      result
-        ..add('Produtos_secundarios')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
     value = object.fotoDaManutencao;
     if (value != null) {
       result
@@ -73,6 +66,21 @@ class _$ManutencaoGzoxRecordSerializer
         ..add('placa')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
+    }
+    value = object.produtoManutencao;
+    if (value != null) {
+      result
+        ..add('produto_manutencao')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.secund;
+    if (value != null) {
+      result
+        ..add('secund')
+        ..add(serializers.serialize(value,
+            specifiedType:
+                const FullType(BuiltList, const [const FullType(String)])));
     }
     value = object.ffRef;
     if (value != null) {
@@ -105,10 +113,6 @@ class _$ManutencaoGzoxRecordSerializer
           result.dataDaManutencao = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
           break;
-        case 'Produtos_secundarios':
-          result.produtosSecundarios = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
         case 'Foto_da_manutencao':
           result.fotoDaManutencao = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
@@ -124,6 +128,16 @@ class _$ManutencaoGzoxRecordSerializer
         case 'placa':
           result.placa = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
+          break;
+        case 'produto_manutencao':
+          result.produtoManutencao = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
+        case 'secund':
+          result.secund.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(String)]))!
+              as BuiltList<Object?>);
           break;
         case 'Document__Reference__Field':
           result.ffRef = serializers.deserialize(value,
@@ -144,8 +158,6 @@ class _$ManutencaoGzoxRecord extends ManutencaoGzoxRecord {
   @override
   final DateTime? dataDaManutencao;
   @override
-  final String? produtosSecundarios;
-  @override
   final String? fotoDaManutencao;
   @override
   final String? aplicadorCredenciado;
@@ -153,6 +165,10 @@ class _$ManutencaoGzoxRecord extends ManutencaoGzoxRecord {
   final String? oQueFoiFeito;
   @override
   final String? placa;
+  @override
+  final String? produtoManutencao;
+  @override
+  final BuiltList<String>? secund;
   @override
   final DocumentReference<Object?>? ffRef;
 
@@ -163,11 +179,12 @@ class _$ManutencaoGzoxRecord extends ManutencaoGzoxRecord {
   _$ManutencaoGzoxRecord._(
       {this.codigoDoProduto,
       this.dataDaManutencao,
-      this.produtosSecundarios,
       this.fotoDaManutencao,
       this.aplicadorCredenciado,
       this.oQueFoiFeito,
       this.placa,
+      this.produtoManutencao,
+      this.secund,
       this.ffRef})
       : super._();
 
@@ -186,11 +203,12 @@ class _$ManutencaoGzoxRecord extends ManutencaoGzoxRecord {
     return other is ManutencaoGzoxRecord &&
         codigoDoProduto == other.codigoDoProduto &&
         dataDaManutencao == other.dataDaManutencao &&
-        produtosSecundarios == other.produtosSecundarios &&
         fotoDaManutencao == other.fotoDaManutencao &&
         aplicadorCredenciado == other.aplicadorCredenciado &&
         oQueFoiFeito == other.oQueFoiFeito &&
         placa == other.placa &&
+        produtoManutencao == other.produtoManutencao &&
+        secund == other.secund &&
         ffRef == other.ffRef;
   }
 
@@ -202,13 +220,15 @@ class _$ManutencaoGzoxRecord extends ManutencaoGzoxRecord {
                 $jc(
                     $jc(
                         $jc(
-                            $jc($jc(0, codigoDoProduto.hashCode),
-                                dataDaManutencao.hashCode),
-                            produtosSecundarios.hashCode),
-                        fotoDaManutencao.hashCode),
-                    aplicadorCredenciado.hashCode),
-                oQueFoiFeito.hashCode),
-            placa.hashCode),
+                            $jc(
+                                $jc($jc(0, codigoDoProduto.hashCode),
+                                    dataDaManutencao.hashCode),
+                                fotoDaManutencao.hashCode),
+                            aplicadorCredenciado.hashCode),
+                        oQueFoiFeito.hashCode),
+                    placa.hashCode),
+                produtoManutencao.hashCode),
+            secund.hashCode),
         ffRef.hashCode));
   }
 
@@ -217,11 +237,12 @@ class _$ManutencaoGzoxRecord extends ManutencaoGzoxRecord {
     return (newBuiltValueToStringHelper(r'ManutencaoGzoxRecord')
           ..add('codigoDoProduto', codigoDoProduto)
           ..add('dataDaManutencao', dataDaManutencao)
-          ..add('produtosSecundarios', produtosSecundarios)
           ..add('fotoDaManutencao', fotoDaManutencao)
           ..add('aplicadorCredenciado', aplicadorCredenciado)
           ..add('oQueFoiFeito', oQueFoiFeito)
           ..add('placa', placa)
+          ..add('produtoManutencao', produtoManutencao)
+          ..add('secund', secund)
           ..add('ffRef', ffRef))
         .toString();
   }
@@ -241,11 +262,6 @@ class ManutencaoGzoxRecordBuilder
   set dataDaManutencao(DateTime? dataDaManutencao) =>
       _$this._dataDaManutencao = dataDaManutencao;
 
-  String? _produtosSecundarios;
-  String? get produtosSecundarios => _$this._produtosSecundarios;
-  set produtosSecundarios(String? produtosSecundarios) =>
-      _$this._produtosSecundarios = produtosSecundarios;
-
   String? _fotoDaManutencao;
   String? get fotoDaManutencao => _$this._fotoDaManutencao;
   set fotoDaManutencao(String? fotoDaManutencao) =>
@@ -264,6 +280,16 @@ class ManutencaoGzoxRecordBuilder
   String? get placa => _$this._placa;
   set placa(String? placa) => _$this._placa = placa;
 
+  String? _produtoManutencao;
+  String? get produtoManutencao => _$this._produtoManutencao;
+  set produtoManutencao(String? produtoManutencao) =>
+      _$this._produtoManutencao = produtoManutencao;
+
+  ListBuilder<String>? _secund;
+  ListBuilder<String> get secund =>
+      _$this._secund ??= new ListBuilder<String>();
+  set secund(ListBuilder<String>? secund) => _$this._secund = secund;
+
   DocumentReference<Object?>? _ffRef;
   DocumentReference<Object?>? get ffRef => _$this._ffRef;
   set ffRef(DocumentReference<Object?>? ffRef) => _$this._ffRef = ffRef;
@@ -277,11 +303,12 @@ class ManutencaoGzoxRecordBuilder
     if ($v != null) {
       _codigoDoProduto = $v.codigoDoProduto;
       _dataDaManutencao = $v.dataDaManutencao;
-      _produtosSecundarios = $v.produtosSecundarios;
       _fotoDaManutencao = $v.fotoDaManutencao;
       _aplicadorCredenciado = $v.aplicadorCredenciado;
       _oQueFoiFeito = $v.oQueFoiFeito;
       _placa = $v.placa;
+      _produtoManutencao = $v.produtoManutencao;
+      _secund = $v.secund?.toBuilder();
       _ffRef = $v.ffRef;
       _$v = null;
     }
@@ -303,16 +330,30 @@ class ManutencaoGzoxRecordBuilder
   ManutencaoGzoxRecord build() => _build();
 
   _$ManutencaoGzoxRecord _build() {
-    final _$result = _$v ??
-        new _$ManutencaoGzoxRecord._(
-            codigoDoProduto: codigoDoProduto,
-            dataDaManutencao: dataDaManutencao,
-            produtosSecundarios: produtosSecundarios,
-            fotoDaManutencao: fotoDaManutencao,
-            aplicadorCredenciado: aplicadorCredenciado,
-            oQueFoiFeito: oQueFoiFeito,
-            placa: placa,
-            ffRef: ffRef);
+    _$ManutencaoGzoxRecord _$result;
+    try {
+      _$result = _$v ??
+          new _$ManutencaoGzoxRecord._(
+              codigoDoProduto: codigoDoProduto,
+              dataDaManutencao: dataDaManutencao,
+              fotoDaManutencao: fotoDaManutencao,
+              aplicadorCredenciado: aplicadorCredenciado,
+              oQueFoiFeito: oQueFoiFeito,
+              placa: placa,
+              produtoManutencao: produtoManutencao,
+              secund: _secund?.build(),
+              ffRef: ffRef);
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'secund';
+        _secund?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            r'ManutencaoGzoxRecord', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

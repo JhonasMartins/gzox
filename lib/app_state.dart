@@ -102,6 +102,15 @@ class FFAppState {
   ];
 
   List<String> ModeloCarro = [];
+
+  List<String> ProdutosManutencao = [
+    'Repel Boost',
+    'Seeting Boost',
+    'Hi-mohs Neo Maintenance',
+    'Hi-mohs Glow Maintenance'
+  ];
+
+  List<String> outros = ['teste'];
 }
 
 LatLng? _latLngFromString(String? val) {

@@ -19,9 +19,6 @@ abstract class ManutencaoGzoxRecord
   @BuiltValueField(wireName: 'Data_da_manutencao')
   DateTime? get dataDaManutencao;
 
-  @BuiltValueField(wireName: 'Produtos_secundarios')
-  String? get produtosSecundarios;
-
   @BuiltValueField(wireName: 'Foto_da_manutencao')
   String? get fotoDaManutencao;
 
@@ -33,17 +30,23 @@ abstract class ManutencaoGzoxRecord
 
   String? get placa;
 
+  @BuiltValueField(wireName: 'produto_manutencao')
+  String? get produtoManutencao;
+
+  BuiltList<String>? get secund;
+
   @BuiltValueField(wireName: kDocumentReferenceField)
   DocumentReference? get ffRef;
   DocumentReference get reference => ffRef!;
 
   static void _initializeBuilder(ManutencaoGzoxRecordBuilder builder) => builder
     ..codigoDoProduto = ''
-    ..produtosSecundarios = ''
     ..fotoDaManutencao = ''
     ..aplicadorCredenciado = ''
     ..oQueFoiFeito = ''
-    ..placa = '';
+    ..placa = ''
+    ..produtoManutencao = ''
+    ..secund = ListBuilder();
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('Manutencao_gzox');
@@ -63,11 +66,12 @@ abstract class ManutencaoGzoxRecord
           ..dataDaManutencao = safeGet(() =>
               DateTime.fromMillisecondsSinceEpoch(
                   snapshot.data['Data_da_manutencao']))
-          ..produtosSecundarios = snapshot.data['Produtos_secundarios']
           ..fotoDaManutencao = snapshot.data['Foto_da_manutencao']
           ..aplicadorCredenciado = snapshot.data['Aplicador_credenciado']
           ..oQueFoiFeito = snapshot.data['O_que_foi_feito']
           ..placa = snapshot.data['placa']
+          ..produtoManutencao = snapshot.data['produto_manutencao']
+          ..secund = safeGet(() => ListBuilder(snapshot.data['secund']))
           ..ffRef = ManutencaoGzoxRecord.collection.doc(snapshot.objectID),
       );
 
@@ -100,11 +104,11 @@ abstract class ManutencaoGzoxRecord
 Map<String, dynamic> createManutencaoGzoxRecordData({
   String? codigoDoProduto,
   DateTime? dataDaManutencao,
-  String? produtosSecundarios,
   String? fotoDaManutencao,
   String? aplicadorCredenciado,
   String? oQueFoiFeito,
   String? placa,
+  String? produtoManutencao,
 }) {
   final firestoreData = serializers.toFirestore(
     ManutencaoGzoxRecord.serializer,
@@ -112,11 +116,12 @@ Map<String, dynamic> createManutencaoGzoxRecordData({
       (m) => m
         ..codigoDoProduto = codigoDoProduto
         ..dataDaManutencao = dataDaManutencao
-        ..produtosSecundarios = produtosSecundarios
         ..fotoDaManutencao = fotoDaManutencao
         ..aplicadorCredenciado = aplicadorCredenciado
         ..oQueFoiFeito = oQueFoiFeito
-        ..placa = placa,
+        ..placa = placa
+        ..produtoManutencao = produtoManutencao
+        ..secund = null,
     ),
   );
 

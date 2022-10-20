@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'auth_util.dart';
-
 class GzoxSystemFirebaseUser {
   GzoxSystemFirebaseUser(this.user);
   User? user;
@@ -20,7 +18,6 @@ Stream<GzoxSystemFirebaseUser> gzoxSystemFirebaseUserStream() =>
         .map<GzoxSystemFirebaseUser>(
       (user) {
         currentUser = GzoxSystemFirebaseUser(user);
-        updateUserJwtTimer(user);
         return currentUser!;
       },
     );

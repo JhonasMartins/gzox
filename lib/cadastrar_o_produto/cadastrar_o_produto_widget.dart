@@ -15,6 +15,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:text_search/text_search.dart';
 
 class CadastrarOProdutoWidget extends StatefulWidget {
   const CadastrarOProdutoWidget({
@@ -53,6 +54,7 @@ class _CadastrarOProdutoWidgetState extends State<CadastrarOProdutoWidget> {
   TextEditingController? codigoDoProdutoController;
   String? produtoPrincipalValue;
   List<String>? produtosSecundariosValues;
+  List<AplicacaoGzoxRecord> simpleSearchResults = [];
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -548,16 +550,21 @@ class _CadastrarOProdutoWidgetState extends State<CadastrarOProdutoWidget> {
                           nome: 'Modelo: ${widget.modelo}',
                           whatsapp: '55${widget.whatsapp}',
                         );
-                        // Foto do véiculo
-                        await EnviarFotoCall.call(
-                          whatsapp: '55${widget.whatsapp}',
-                          imagem: uploadedFileUrl,
-                        );
                         // Produto aplicado
                         await EnviarMensagemCall.call(
                           nome:
                               'Recebeu nosso sistema de proteção de pintura ${produtoPrincipalValue}  aplicado por nosso credenciado',
                           whatsapp: '55${widget.whatsapp}',
+                        );
+                        await EnviarMensagemCall.call(
+                          nome:
+                              ' A GZOX é a marca mais importante de COATINGS de proteção de pintura da Ásia. Ela e reconhecida internacionalmente pela qualidade dos seus produtos. Fabricada pela SOFT99 Corporation no Japão, a GZOX reúne o que há de mais moderno em qualidade e tecnologia.  Para visualizar as informações no GZOX SYSTEM, baixe o APP conforme seu sistema operacional: https://gzox.com.br/gzox-system/   Recomendamos que faça sempre as manutenções na rede de aplicadores credenciados e que não utilize produtos agressivos para lavagens. Dessa forma, você manterá o coating aplicado sobre o seu veículo sempre com alto nível de repelência.  Em caso de dúvidas procure nossos aplicadores credenciados ou entre em contato conosco através do email: contato@soft99brasil.com.br  Att. Equipe GZOX BRASIL',
+                          whatsapp: '55${widget.whatsapp}',
+                        );
+                        // Foto do véiculo
+                        await EnviarFotoCall.call(
+                          whatsapp: '55${widget.whatsapp}',
+                          imagem: uploadedFileUrl,
                         );
                         // Contato do aplicador
                         await ContatoCall.call(
@@ -567,6 +574,24 @@ class _CadastrarOProdutoWidgetState extends State<CadastrarOProdutoWidget> {
                         );
 
                         context.pushNamed('sucesso');
+
+                        await queryAplicacaoGzoxRecordOnce()
+                            .then(
+                              (records) => simpleSearchResults = TextSearch(
+                                records
+                                    .map(
+                                      (record) => TextSearchItem(
+                                          record, [record.codigoDoProduto!]),
+                                    )
+                                    .toList(),
+                              )
+                                  .search(codigoDoProdutoController!.text)
+                                  .map((r) => r.object)
+                                  .take(2)
+                                  .toList(),
+                            )
+                            .onError((_, __) => simpleSearchResults = [])
+                            .whenComplete(() => setState(() {}));
                       },
                       text: 'Registrar',
                       icon: Icon(

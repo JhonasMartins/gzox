@@ -53,6 +53,8 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 
+	<key>NSLocationWhenInUseUsageDescription</key>
+      <string>In order to search nearby, this app requires access to your current location.</string>
 	<key>NSCameraUsageDescription</key>
       <string>A fim de tirar uma fotografia ou vídeo, esta aplicação requer autorização para aceder à câmara.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -65,6 +67,22 @@
         <string>remote-notification</string>
     </array>
 
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>comgooglemaps</string>
+      <string>baidumap</string>
+      <string>iosamap</string>
+      <string>waze</string>
+      <string>yandexmaps</string>
+      <string>yandexnavi</string>
+      <string>citymapper</string>
+      <string>mapswithme</string>
+      <string>osmandmaps</string>
+      <string>dgis</string>
+      <string>qqmap</string>
+      <string>here-location</string>
+
+    </array>
 
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

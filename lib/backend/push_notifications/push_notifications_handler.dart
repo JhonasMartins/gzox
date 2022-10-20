@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import '../../index.dart';
 import '../../main.dart';
 
+final _handledMessageIds = <String?>{};
+
 class PushNotificationsHandler extends StatefulWidget {
   const PushNotificationsHandler({Key? key, required this.child})
       : super(key: key);
@@ -39,6 +41,11 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
   }
 
   Future _handlePushNotification(RemoteMessage message) async {
+    if (_handledMessageIds.contains(message.messageId)) {
+      return;
+    }
+    _handledMessageIds.add(message.messageId);
+
     if (mounted) {
       setState(() => _loading = true);
     }
@@ -108,6 +115,13 @@ final pageBuilderMap = <String, Future<Widget> Function(Map<String, dynamic>)>{
   'editarperfil': (data) async => EditarperfilWidget(),
   'Detalhes_da_aplicacao': (data) async => DetalhesDaAplicacaoWidget(
         placa: getParameter(data, 'placa'),
+        marca: getParameter(data, 'marca'),
+        modelo: getParameter(data, 'modelo'),
+        quilometragem: getParameter(data, 'quilometragem'),
+        nome: getParameter(data, 'nome'),
+        email: getParameter(data, 'email'),
+        whatsapp: getParameter(data, 'whatsapp'),
+        tipo: getParameter(data, 'tipo'),
       ),
   'Notificacoes': (data) async => NotificacoesWidget(),
   'Cliente_detalhe': (data) async => ClienteDetalheWidget(
@@ -141,6 +155,11 @@ final pageBuilderMap = <String, Future<Widget> Function(Map<String, dynamic>)>{
         user: getParameter(data, 'user'),
         nome: getParameter(data, 'nome'),
       ),
+  'mapa': (data) async => MapaWidget(
+        cities:
+            await getDocumentParameter(data, 'cities', MapasRecord.serializer),
+      ),
+  'fdsf': (data) async => FdsfWidget(),
 };
 
 bool hasMatchingParameters(Map<String, dynamic> data, Set<String> params) =>

@@ -15,6 +15,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ManutencaoWidget extends StatefulWidget {
   const ManutencaoWidget({
@@ -52,7 +53,11 @@ class _ManutencaoWidgetState extends State<ManutencaoWidget> {
   String? produtoPrincipalValue;
   List<String>? produtosSecundariosValues;
   TextEditingController? oqueFoiFeitoController;
-  ApiCallResponse? apiResultzw8;
+  ApiCallResponse? apiResult114;
+  ApiCallResponse? apiResultf1w;
+  ApiCallResponse? apiResultjnr;
+  ApiCallResponse? apiResultw9k;
+  ApiCallResponse? apiResultr4m;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -466,13 +471,13 @@ class _ManutencaoWidgetState extends State<ManutencaoWidget> {
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(28, 12, 28, 0),
                         child: FlutterFlowDropDown(
-                          options: FFAppState().Produtos.toList(),
+                          options: FFAppState().ProdutosManutencao.toList(),
                           onChanged: (val) =>
                               setState(() => produtoPrincipalValue = val),
                           width: double.infinity,
                           height: 60,
                           textStyle: FlutterFlowTheme.of(context).bodyText1,
-                          hintText: 'Selecione o produto...',
+                          hintText: 'Selecione de manutenção..',
                           icon: Icon(
                             Icons.keyboard_arrow_down_rounded,
                             color: FlutterFlowTheme.of(context).secondaryText,
@@ -488,7 +493,7 @@ class _ManutencaoWidgetState extends State<ManutencaoWidget> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
                         child: Text(
                           'Produtos secundários',
                           style:
@@ -512,7 +517,7 @@ class _ManutencaoWidgetState extends State<ManutencaoWidget> {
                                     fontFamily: 'Poppins',
                                     color: Colors.white,
                                   ),
-                          iconColor: Color(0xFF141B1C),
+                          iconColor: Color(0xFF20222C),
                           iconSize: 18,
                           elevation: 4,
                         ),
@@ -533,7 +538,7 @@ class _ManutencaoWidgetState extends State<ManutencaoWidget> {
                         chipSpacing: 20,
                         multiselect: true,
                         initialized: produtosSecundariosValues != null,
-                        alignment: WrapAlignment.start,
+                        alignment: WrapAlignment.center,
                       ),
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(28, 16, 28, 0),
@@ -719,28 +724,59 @@ class _ManutencaoWidgetState extends State<ManutencaoWidget> {
                     padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 30),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        final manutencaoGzoxCreateData =
-                            createManutencaoGzoxRecordData(
-                          dataDaManutencao: datePicked,
-                          produtosSecundarios: produtosSecundariosValues
-                              ?.contains(produtosSecundariosValues?.length)
-                              ?.toString(),
-                          fotoDaManutencao: uploadedFileUrl,
-                          aplicadorCredenciado: currentUserDisplayName,
-                          oQueFoiFeito: oqueFoiFeitoController!.text,
-                          placa: widget.placa,
-                        );
+                        final manutencaoGzoxCreateData = {
+                          ...createManutencaoGzoxRecordData(
+                            dataDaManutencao: datePicked,
+                            fotoDaManutencao: uploadedFileUrl,
+                            aplicadorCredenciado: currentUserDisplayName,
+                            oQueFoiFeito: oqueFoiFeitoController!.text,
+                            placa: widget.placa,
+                            produtoManutencao: produtoPrincipalValue,
+                          ),
+                          'secund': produtosSecundariosValues,
+                        };
                         await ManutencaoGzoxRecord.collection
                             .doc()
                             .set(manutencaoGzoxCreateData);
-                        apiResultzw8 = await EnviarMensagemCall.call(
-                          nome:
-                              'Prezado, ${widget.nome}, informamos que foi registrada a manutenção periódica do seu veículo: ${widget.placa}',
+                        apiResultjnr = await ManutencaoxanoCall.call(
+                          email: widget.email,
+                          whatsapp: widget.whatsapp,
+                          nome: widget.nome,
+                        );
+                        // Enviar email
+                        await launchUrl(Uri(
+                            scheme: 'mailto',
+                            path: widget.email!,
+                            query: {
+                              'subject': 'Manutenção realizada',
+                              'body':
+                                  'Prezado${widget.nome},  Informamos que foi registrada a manutenção periódica do seu veículo, ${widget.placa}, para visualizar as informações no GZOX SYSTEM, faça o download do aplicativo conforme seu sistema operacional. ',
+                            }
+                                .entries
+                                .map((MapEntry<String, String> e) =>
+                                    '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                .join('&')));
+                        // Nome whatsapp
+                        apiResultf1w = await EnviarMensagemCall.call(
+                          nome: 'Prezado ${widget.nome}',
                           whatsapp: '55${widget.whatsapp}',
                         );
-                        setState(() {
-                          oqueFoiFeitoController?.clear();
-                        });
+                        // texto whatsapp
+                        apiResult114 = await EnviarMensagemCall.call(
+                          whatsapp: '55${widget.whatsapp}',
+                          nome:
+                              'Informamos que foi registrada a manutenção periódica do seu veículo. Acesse o app GZOX SYSTEM  e saiba mais.',
+                        );
+                        // Foto do veículo
+                        apiResultw9k = await EnviarFotoCall.call(
+                          imagem: uploadedFileUrl,
+                          whatsapp: '55${widget.whatsapp}',
+                        );
+                        // Whatsapp aplicador
+                        apiResultr4m = await ContatoCall.call(
+                          whatsappParaEnviar: '55${widget.whatsapp}',
+                          nomeDoContato: '55${currentPhoneNumber}',
+                        );
 
                         context.pushNamed('sucesso');
 

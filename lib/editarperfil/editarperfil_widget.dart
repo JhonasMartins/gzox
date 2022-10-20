@@ -1,10 +1,13 @@
 import '../auth/auth_util.dart';
 import '../backend/backend.dart';
 import '../backend/firebase_storage/storage.dart';
+import '../flutter_flow/flutter_flow_place_picker.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import '../flutter_flow/place.dart';
 import '../flutter_flow/upload_media.dart';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -24,6 +27,7 @@ class _EditarperfilWidgetState extends State<EditarperfilWidget> {
 
   TextEditingController? seuNomeController;
   TextEditingController? whatsappController;
+  var placePickerValue = FFPlace();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -125,6 +129,7 @@ class _EditarperfilWidgetState extends State<EditarperfilWidget> {
                                               ),
                                               child: Image.network(
                                                 uploadedFileUrl,
+                                                fit: BoxFit.fill,
                                               ),
                                             ),
                                           ),
@@ -219,7 +224,7 @@ class _EditarperfilWidgetState extends State<EditarperfilWidget> {
                 controller: seuNomeController,
                 obscureText: false,
                 decoration: InputDecoration(
-                  labelText: 'Seu nome',
+                  labelText: 'Nome da sua empresa',
                   labelStyle: FlutterFlowTheme.of(context).bodyText2.override(
                         fontFamily: 'Poppins',
                         color: FlutterFlowTheme.of(context).primaryBtnText,
@@ -269,7 +274,7 @@ class _EditarperfilWidgetState extends State<EditarperfilWidget> {
                 controller: whatsappController,
                 obscureText: false,
                 decoration: InputDecoration(
-                  labelText: 'Seu  whatsapp',
+                  labelText: 'Whatsapp comercial',
                   labelStyle: FlutterFlowTheme.of(context).bodyText2.override(
                         fontFamily: 'Poppins',
                         color: FlutterFlowTheme.of(context).primaryBtnText,
@@ -322,6 +327,45 @@ class _EditarperfilWidgetState extends State<EditarperfilWidget> {
                 keyboardType: TextInputType.number,
               ),
             ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 18, 0, 0),
+              child: FlutterFlowPlacePicker(
+                iOSGoogleMapsApiKey: 'AIzaSyBhfe1aV66YPZBebeGeNXH9JIYWfPSX0bc',
+                androidGoogleMapsApiKey:
+                    'AIzaSyDqe3HcMCDf7fwUp-TpDK8yHXIs3WlTbME',
+                webGoogleMapsApiKey: 'AIzaSyCXMw_bNK_2_XcoRViL3wAuKZSRJjxtEdQ',
+                onSelect: (place) async {
+                  setState(() => placePickerValue = place);
+                },
+                defaultText: 'Endereço da empresa',
+                icon: Icon(
+                  Icons.place,
+                  color: Colors.white,
+                  size: 16,
+                ),
+                buttonOptions: FFButtonOptions(
+                  width: 300,
+                  height: 40,
+                  color: FlutterFlowTheme.of(context).primaryColor,
+                  textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
+                      ),
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(22, 10, 22, 0),
+              child: Text(
+                placePickerValue.address,
+                style: FlutterFlowTheme.of(context).bodyText1,
+              ),
+            ),
             Align(
               alignment: AlignmentDirectional(0, 0.05),
               child: Padding(
@@ -333,8 +377,22 @@ class _EditarperfilWidgetState extends State<EditarperfilWidget> {
                       photoUrl: uploadedFileUrl,
                       phoneNumber: whatsappController!.text,
                       urlFoto: uploadedFileUrl,
+                      endereco: placePickerValue.latLng,
                     );
                     await currentUserReference!.update(userUpdateData);
+
+                    final mapasCreateData = createMapasRecordData(
+                      latitudeLogitude: placePickerValue.latLng,
+                      rua: placePickerValue.address,
+                      cidade: placePickerValue.city,
+                      estado: placePickerValue.state,
+                      pais: placePickerValue.country,
+                      user: currentUserReference,
+                      nomeDaEstetica: seuNomeController!.text,
+                      whatsapp: whatsappController!.text,
+                      email: currentUserEmail,
+                    );
+                    await MapasRecord.collection.doc().set(mapasCreateData);
                     setState(() => FFAppState().fotodeperfil = uploadedFileUrl);
 
                     context.pushNamed('Perfil');

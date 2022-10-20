@@ -156,6 +156,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               path: 'detalhesDaAplicacao',
               builder: (context, params) => DetalhesDaAplicacaoWidget(
                 placa: params.getParam('placa', ParamType.String),
+                marca: params.getParam('marca', ParamType.String),
+                modelo: params.getParam('modelo', ParamType.String),
+                quilometragem:
+                    params.getParam('quilometragem', ParamType.String),
+                nome: params.getParam('nome', ParamType.String),
+                email: params.getParam('email', ParamType.String),
+                whatsapp: params.getParam('whatsapp', ParamType.String),
+                tipo: params.getParam('tipo', ParamType.String),
               ),
             ),
             FFRoute(
@@ -224,6 +232,21 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
                     'user', ParamType.DocumentReference, false, 'user'),
                 nome: params.getParam('nome', ParamType.String),
               ),
+            ),
+            FFRoute(
+              name: 'mapa',
+              path: 'mapa',
+              asyncParams: {
+                'cities': getDoc('mapas', MapasRecord.serializer),
+              },
+              builder: (context, params) => MapaWidget(
+                cities: params.getParam('cities', ParamType.Document),
+              ),
+            ),
+            FFRoute(
+              name: 'fdsf',
+              path: 'fdsf',
+              builder: (context, params) => FdsfWidget(),
             )
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ).toRoute(appStateNotifier),

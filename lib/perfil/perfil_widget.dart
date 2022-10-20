@@ -258,7 +258,7 @@ class _PerfilWidgetState extends State<PerfilWidget> {
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                             child: Text(
-                              'Editar perfil',
+                              'Atualizar perfil',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText2
                                   .override(

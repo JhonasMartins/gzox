@@ -22,18 +22,6 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /veiculo_system/{parent}/testedesub/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if false;
-      allow delete: if false;
-    }
-
-    match /{path=**}/testedesub/{document} {
-      allow read: if true;
-    }
-
-
     match /dados_do_aplicador/{document} {
       allow create: if true;
       allow read: if true;
@@ -49,6 +37,13 @@ service cloud.firestore {
     }
 
     match /veiculo/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if false;
+      allow delete: if false;
+    }
+
+    match /mapas/{document} {
       allow create: if true;
       allow read: if true;
       allow write: if false;

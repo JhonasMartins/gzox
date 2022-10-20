@@ -4,10 +4,10 @@ import 'package:from_css_color/from_css_color.dart';
 import 'veiculo_system_record.dart';
 import 'aplicacao_gzox_record.dart';
 import 'manutencao_gzox_record.dart';
-import 'testedesub_record.dart';
 import 'dados_do_aplicador_record.dart';
 import 'user_record.dart';
 import 'veiculo_record.dart';
+import 'mapas_record.dart';
 
 import 'index.dart';
 
@@ -22,10 +22,10 @@ const kDocumentReferenceField = 'Document__Reference__Field';
   VeiculoSystemRecord,
   AplicacaoGzoxRecord,
   ManutencaoGzoxRecord,
-  TestedesubRecord,
   DadosDoAplicadorRecord,
   UserRecord,
   VeiculoRecord,
+  MapasRecord,
 ])
 final Serializers serializers = (_$serializers.toBuilder()
       ..add(DocumentReferenceSerializer())

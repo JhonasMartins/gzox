@@ -1,3 +1,5 @@
+import '../auth/auth_util.dart';
+import '../backend/api_requests/api_calls.dart';
 import '../backend/backend.dart';
 import '../backend/firebase_storage/storage.dart';
 import '../flutter_flow/flutter_flow_choice_chips.dart';
@@ -7,6 +9,7 @@ import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../flutter_flow/upload_media.dart';
 import '../flutter_flow/permissions_util.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -14,6 +17,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:text_search/text_search.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RetornoWidget extends StatefulWidget {
   const RetornoWidget({Key? key}) : super(key: key);
@@ -178,7 +182,7 @@ class _RetornoWidgetState extends State<RetornoWidget> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Text(
-                                    'Dados do proprietário',
+                                    'Dados do veículo',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyText2
                                         .override(
@@ -200,7 +204,7 @@ class _RetornoWidgetState extends State<RetornoWidget> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Nome:',
+                                    'Marca:',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyText2
                                         .override(
@@ -271,7 +275,7 @@ class _RetornoWidgetState extends State<RetornoWidget> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Email:',
+                                    'Modelo:',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyText2
                                         .override(
@@ -342,7 +346,7 @@ class _RetornoWidgetState extends State<RetornoWidget> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Whatsapp:',
+                                    'Nome:',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyText2
                                         .override(
@@ -646,7 +650,7 @@ class _RetornoWidgetState extends State<RetornoWidget> {
                         chipSpacing: 20,
                         multiselect: true,
                         initialized: produtosSecundariosValues != null,
-                        alignment: WrapAlignment.start,
+                        alignment: WrapAlignment.center,
                       ),
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
@@ -782,30 +786,157 @@ class _RetornoWidgetState extends State<RetornoWidget> {
                   ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 30),
-                    child: FFButtonWidget(
-                      onPressed: () {
-                        print('Button pressed ...');
+                    child: StreamBuilder<List<VeiculoRecord>>(
+                      stream: queryVeiculoRecord(
+                        queryBuilder: (veiculoRecord) => veiculoRecord
+                            .where('Placa', isEqualTo: placaController!.text),
+                        singleRecord: true,
+                      ),
+                      builder: (context, snapshot) {
+                        // Customize what your widget looks like when it's loading.
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: SpinKitChasingDots(
+                                color:
+                                    FlutterFlowTheme.of(context).primaryColor,
+                                size: 50,
+                              ),
+                            ),
+                          );
+                        }
+                        List<VeiculoRecord> buttonVeiculoRecordList =
+                            snapshot.data!;
+                        // Return an empty Container when the document does not exist.
+                        if (snapshot.data!.isEmpty) {
+                          return Container();
+                        }
+                        final buttonVeiculoRecord =
+                            buttonVeiculoRecordList.isNotEmpty
+                                ? buttonVeiculoRecordList.first
+                                : null;
+                        return FFButtonWidget(
+                          onPressed: () async {
+                            final aplicacaoGzoxCreateData = {
+                              ...createAplicacaoGzoxRecordData(
+                                codigoDoProduto:
+                                    codigoDoProdutoController!.text,
+                                dataDaAplicacao: datePicked,
+                                produtoGzox: produtoPrincipalValue,
+                                aplicadorCredenciado: currentUserDisplayName,
+                                placa: placaController!.text,
+                                fotografia: uploadedFileUrl,
+                              ),
+                              'Produtos_secundarios': produtosSecundariosValues,
+                            };
+                            await AplicacaoGzoxRecord.collection
+                                .doc()
+                                .set(aplicacaoGzoxCreateData);
+                            // Xano
+                            await XanoCall.call(
+                              whatsapp: buttonVeiculoRecord!.whatsappDoDonoGzox,
+                              email: buttonVeiculoRecord!.emailDoDonoGzox,
+                              nome: buttonVeiculoRecord!.nomeDoDonoGzox,
+                            );
+                            // Boas vindas
+                            await EnviarMensagemCall.call(
+                              nome:
+                                  'Olá, ${buttonVeiculoRecord!.nomeDoDonoGzox}',
+                              whatsapp:
+                                  '55${buttonVeiculoRecord!.whatsappDoDonoGzox}',
+                              mensagem:
+                                  'É com grande satisfação que recebemos o registro  do seu veículo em nosso banco de dados.',
+                            );
+                            // Informamos que
+                            await EnviarMensagemCall.call(
+                              nome: 'Informamos que seu veículo',
+                              whatsapp:
+                                  '55${buttonVeiculoRecord!.whatsappDoDonoGzox}',
+                            );
+                            // Placa do veículo
+                            await EnviarMensagemCall.call(
+                              nome:
+                                  'Placa do veículo: ${buttonVeiculoRecord!.placa}',
+                              whatsapp:
+                                  '55${buttonVeiculoRecord!.whatsappDoDonoGzox}',
+                            );
+                            // Marca
+                            await EnviarMensagemCall.call(
+                              nome: 'Marca: ${buttonVeiculoRecord!.marca}',
+                              whatsapp:
+                                  '55${buttonVeiculoRecord!.whatsappDoDonoGzox}',
+                            );
+                            // Modelo
+                            await EnviarMensagemCall.call(
+                              nome: 'Modelo: ${buttonVeiculoRecord!.modelo}',
+                              whatsapp:
+                                  '55${buttonVeiculoRecord!.whatsappDoDonoGzox}',
+                            );
+                            // Produto aplicado
+                            await EnviarMensagemCall.call(
+                              nome:
+                                  'Recebeu nosso sistema de proteção de pintura ${produtoPrincipalValue}  aplicado por nosso credenciado',
+                              whatsapp:
+                                  '55${buttonVeiculoRecord!.whatsappDoDonoGzox}',
+                            );
+                            await EnviarMensagemCall.call(
+                              nome:
+                                  ' A GZOX é a marca mais importante de COATINGS de proteção de pintura da Ásia. Ela e reconhecida internacionalmente pela qualidade dos seus produtos. Fabricada pela SOFT99 Corporation no Japão, a GZOX reúne o que há de mais moderno em qualidade e tecnologia.  Para visualizar as informações no GZOX SYSTEM, baixe o APP conforme seu sistema operacional: https://gzox.com.br/gzox-system/   Recomendamos que faça sempre as manutenções na rede de aplicadores credenciados e que não utilize produtos agressivos para lavagens. Dessa forma, você manterá o coating aplicado sobre o seu veículo sempre com alto nível de repelência.  Em caso de dúvidas procure nossos aplicadores credenciados ou entre em contato conosco através do email: contato@soft99brasil.com.br  Att. Equipe GZOX BRASIL',
+                              whatsapp:
+                                  '55${buttonVeiculoRecord!.whatsappDoDonoGzox}',
+                            );
+                            // Foto do véiculo
+                            await EnviarFotoCall.call(
+                              whatsapp:
+                                  '55${buttonVeiculoRecord!.whatsappDoDonoGzox}',
+                              imagem: uploadedFileUrl,
+                            );
+                            // Contato do aplicador
+                            await ContatoCall.call(
+                              whatsappParaEnviar:
+                                  '55${buttonVeiculoRecord!.whatsappDoDonoGzox}',
+                              nomeDoContato: currentUserDisplayName,
+                              whatsappDoAplicador: '55${currentPhoneNumber}',
+                            );
+                            await launchUrl(Uri(
+                                scheme: 'mailto',
+                                path: buttonVeiculoRecord!.emailDoDonoGzox!,
+                                query: {
+                                  'subject': 'Aplicação GZOX',
+                                  'body':
+                                      'Prezado${buttonVeiculoRecord!.nomeDoDonoGzox}, informamos que seu veículo foi registrado no nosso sistema de autenticação de produtos. Acesse o GZOX SYSTEM  e saiba mais.',
+                                }
+                                    .entries
+                                    .map((MapEntry<String, String> e) =>
+                                        '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                    .join('&')));
+
+                            context.pushNamed('sucesso');
+                          },
+                          text: 'Registrar',
+                          icon: Icon(
+                            Icons.double_arrow,
+                            size: 15,
+                          ),
+                          options: FFButtonOptions(
+                            width: 270,
+                            height: 50,
+                            color: FlutterFlowTheme.of(context).primaryColor,
+                            textStyle:
+                                FlutterFlowTheme.of(context).subtitle1.override(
+                                      fontFamily: 'Poppins',
+                                      color: Colors.white,
+                                    ),
+                            elevation: 3,
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                              width: 1,
+                            ),
+                          ),
+                        );
                       },
-                      text: 'Registrar',
-                      icon: Icon(
-                        Icons.double_arrow,
-                        size: 15,
-                      ),
-                      options: FFButtonOptions(
-                        width: 270,
-                        height: 50,
-                        color: FlutterFlowTheme.of(context).primaryColor,
-                        textStyle:
-                            FlutterFlowTheme.of(context).subtitle1.override(
-                                  fontFamily: 'Poppins',
-                                  color: Colors.white,
-                                ),
-                        elevation: 3,
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                          width: 1,
-                        ),
-                      ),
                     ),
                   ),
                 ],

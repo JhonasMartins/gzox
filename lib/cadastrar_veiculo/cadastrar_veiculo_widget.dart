@@ -586,7 +586,7 @@ class _CadastrarVeiculoWidgetState extends State<CadastrarVeiculoWidget> {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 50),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 50),
                     child: FFButtonWidget(
                       onPressed: () async {
                         await queryVeiculoRecordOnce()

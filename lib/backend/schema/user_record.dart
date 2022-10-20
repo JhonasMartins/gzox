@@ -30,6 +30,9 @@ abstract class UserRecord implements Built<UserRecord, UserRecordBuilder> {
   @BuiltValueField(wireName: 'url_foto')
   String? get urlFoto;
 
+  @BuiltValueField(wireName: 'Endereco')
+  LatLng? get endereco;
+
   @BuiltValueField(wireName: kDocumentReferenceField)
   DocumentReference? get ffRef;
   DocumentReference get reference => ffRef!;
@@ -63,6 +66,10 @@ abstract class UserRecord implements Built<UserRecord, UserRecordBuilder> {
               snapshot.data['created_time']))
           ..phoneNumber = snapshot.data['phone_number']
           ..urlFoto = snapshot.data['url_foto']
+          ..endereco = safeGet(() => LatLng(
+                snapshot.data['_geoloc']['lat'],
+                snapshot.data['_geoloc']['lng'],
+              ))
           ..ffRef = UserRecord.collection.doc(snapshot.objectID),
       );
 
@@ -98,6 +105,7 @@ Map<String, dynamic> createUserRecordData({
   DateTime? createdTime,
   String? phoneNumber,
   String? urlFoto,
+  LatLng? endereco,
 }) {
   final firestoreData = serializers.toFirestore(
     UserRecord.serializer,
@@ -109,7 +117,8 @@ Map<String, dynamic> createUserRecordData({
         ..uid = uid
         ..createdTime = createdTime
         ..phoneNumber = phoneNumber
-        ..urlFoto = urlFoto,
+        ..urlFoto = urlFoto
+        ..endereco = endereco,
     ),
   );
 
