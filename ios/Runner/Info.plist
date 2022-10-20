@@ -61,11 +61,6 @@
       <string>A fim de tirar uma fotografia ou vídeo, esta aplicação requer autorização para aceder à câmara.</string>
 	<key>PermissionGroupNotification</key>
       <string>A fim de tirar uma fotografia ou vídeo, esta aplicação requer autorização para aceder à câmara.</string>
-    <key>UIBackgroundModes</key>
-    <array>
-        <string>fetch</string>
-        <string>remote-notification</string>
-    </array>
 
     <key>LSApplicationQueriesSchemes</key>
     <array>

@@ -209,15 +209,6 @@ class _InicioWidgetState extends State<InicioWidget> {
                   );
                 }
                 List<VeiculoRecord> listViewVeiculoRecordList = snapshot.data!;
-                if (listViewVeiculoRecordList.isEmpty) {
-                  return Center(
-                    child: Image.asset(
-                      'assets/images/undraw_preferences_popup_re_4qk0_copiar.webp',
-                      width: MediaQuery.of(context).size.width * 0.88,
-                      height: double.infinity,
-                    ),
-                  );
-                }
                 return ListView.builder(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,

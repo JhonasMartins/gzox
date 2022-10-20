@@ -235,6 +235,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                                   0, 0, 2, 0),
                                           child: TextFormField(
                                             controller: nomeController1,
+                                            readOnly: true,
                                             obscureText: false,
                                             decoration: InputDecoration(
                                               labelText: 'Nome',
@@ -318,6 +319,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                                   0, 0, 2, 0),
                                           child: TextFormField(
                                             controller: nomeController2,
+                                            readOnly: true,
                                             obscureText: false,
                                             decoration: InputDecoration(
                                               labelText: 'Placa',
@@ -401,6 +403,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                                   0, 0, 2, 0),
                                           child: TextFormField(
                                             controller: nomeController3,
+                                            readOnly: true,
                                             obscureText: false,
                                             decoration: InputDecoration(
                                               labelText: 'Marca',
@@ -473,6 +476,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                                   2, 0, 0, 0),
                                           child: TextFormField(
                                             controller: nomeController4,
+                                            readOnly: true,
                                             obscureText: false,
                                             decoration: InputDecoration(
                                               labelText: 'Modelo',
@@ -556,6 +560,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                                   0, 0, 2, 0),
                                           child: TextFormField(
                                             controller: nomeController5,
+                                            readOnly: true,
                                             obscureText: false,
                                             decoration: InputDecoration(
                                               labelText: 'KM',
@@ -628,6 +633,7 @@ class _DetalhesDaAplicacaoWidgetState extends State<DetalhesDaAplicacaoWidget> {
                                                   2, 0, 0, 0),
                                           child: TextFormField(
                                             controller: nomeController6,
+                                            readOnly: true,
                                             obscureText: false,
                                             decoration: InputDecoration(
                                               labelText: 'Tipo de veículo',
